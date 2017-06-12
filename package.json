@@ -21,6 +21,7 @@
     }, 
     "dependencies": {
         "bunyan": "1.8.x",
+        "lodash": "4.17.x",
         "nconf": "0.8.x"
     }, 
     "devDependencies": {
