@@ -1,4 +1,4 @@
-
+var assert = require('assert')
 
 var __ = require('@carbon-io/fibers').__(module)
 var _o = require('@carbon-io/bond')._o(module)
@@ -8,13 +8,8 @@ var testtube = require('@carbon-io/test-tube')
 __(function() {
   module.exports = o.main({
     _type: testtube.Test,
-    name: 'CarbonLogTestSuite',
+    name: '',
     tests: [
-      _o('./createLoggerTests'),
-      _o('./getLoggerTests'),
-      _o('./configureTests'),
-      _o('./basicConfigTests'),
-      _o('./LoggerTests')
     ]
   })
 })
