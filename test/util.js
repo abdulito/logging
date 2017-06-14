@@ -1,6 +1,7 @@
 var util = require('util')
-
 var stream = require('stream')
+
+var _ = require('lodash')
 
 function StringIO() {
   stream.PassThrough.call(this)
@@ -9,7 +10,15 @@ function StringIO() {
 util.inherits(StringIO, stream.PassThrough)
 
 StringIO.prototype.getValue = function() {
-  return JSON.parse(this.read().toString())
+  var records = this.read()
+  if (records) {
+    records = 
+      '[' + 
+      _.trimEnd(records.toString().split('\n').join(','), ',') + 
+      ']'
+    return JSON.parse(records)
+  }
+  return records
 }
 
 module.exports = {
