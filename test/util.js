@@ -1,5 +1,5 @@
-var util = require('util')
 var stream = require('stream')
+var util = require('util')
 
 var _ = require('lodash')
 

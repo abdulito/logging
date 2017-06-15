@@ -8,7 +8,7 @@ var testtube = require('@carbon-io/test-tube')
 __(function() {
   module.exports = o.main({
     _type: testtube.Test,
-    name: '',
+    name: 'LoggerTests',
     tests: [
     ]
   })

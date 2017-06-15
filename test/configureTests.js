@@ -31,6 +31,7 @@ __(function() {
             level: 'INFO',
             stream: this.stream
           })
+          debugger
           logger.info('foo')
           carbonLog.configure({
             'foo': {
