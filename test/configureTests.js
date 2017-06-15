@@ -91,7 +91,6 @@ __(function() {
         _type: testtube.Test,
         name: 'ConfigureTest',
         setup: function() {
-          var stream = require('stream')
           this.stream1 = new util.StringIO()
           this.stream2 = new util.StringIO()
         },
@@ -104,7 +103,6 @@ __(function() {
             level: 'INFO',
             stream: this.stream1
           })
-          debugger
           logger.info('foo')
           carbonLog.configure({
             'foo.*': {
