@@ -6,15 +6,11 @@ var testtube = require('@carbon-io/test-tube')
 __(function() {
   module.exports = o.main({
     _type: testtube.Test,
-    name: 'CarbonLogTestSuite',
+    name: 'StreamsTestSuite',
     tests: [
-      _o('./createLoggerTests'),
-      _o('./getLoggerTests'),
-      _o('./configureTests'),
-      _o('./basicConfigTests'),
-      _o('./LoggerTests'),
-      _o('./streams')
+      _o('./TemplateTests')
     ]
   })
 })
+
 

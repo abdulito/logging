@@ -7,8 +7,6 @@ var _o = require('@carbon-io/bond')._o(module)
 var o = require('@carbon-io/atom').o(module)
 var testtube = require('@carbon-io/test-tube')
 
-var util = require('./util')
-
 var carbonLog = require('../lib')
 
 __(function() {
@@ -20,7 +18,7 @@ __(function() {
         _type: testtube.Test,
         name: 'SimpleCreateLoggerTest',
         setup: function() {
-          this.stream = new util.StringIO()
+          this.stream = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -44,8 +42,8 @@ __(function() {
         _type: testtube.Test,
         name: 'CreateLoggerMultipleStreamsTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -88,8 +86,8 @@ __(function() {
         _type: testtube.Test,
         name: 'CreateLoggerMultipleStreamsAndLoggerLevelTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -133,7 +131,7 @@ __(function() {
         _type: testtube.Test,
         name: 'SimpleCreateLoggerTest',
         setup: function() {
-          this.stream = new util.StringIO()
+          this.stream = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()

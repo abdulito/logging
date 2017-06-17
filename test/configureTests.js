@@ -7,8 +7,6 @@ var _o = require('@carbon-io/bond')._o(module)
 var o = require('@carbon-io/atom').o(module)
 var testtube = require('@carbon-io/test-tube')
 
-var util = require('./util')
-
 var carbonLog = require('../lib')
 
 __(function() {
@@ -20,7 +18,7 @@ __(function() {
         _type: testtube.Test,
         name: 'SimpleConfigureTest',
         setup: function() {
-          this.stream = new util.StringIO()
+          this.stream = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -31,7 +29,6 @@ __(function() {
             level: 'INFO',
             stream: this.stream
           })
-          debugger
           logger.info('foo')
           carbonLog.configure({
             'foo': {
@@ -50,9 +47,9 @@ __(function() {
         _type: testtube.Test,
         name: 'SimpleConfigureTreeTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
-          this.stream3 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
+          this.stream3 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -104,8 +101,8 @@ __(function() {
         _type: testtube.Test,
         name: 'ConfigureTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -144,8 +141,8 @@ __(function() {
         _type: testtube.Test,
         name: 'ConfigureTreeEmptyStringTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -186,8 +183,8 @@ __(function() {
         _type: testtube.Test,
         name: 'ConfigureTreeRootWildcardTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
@@ -228,9 +225,9 @@ __(function() {
         _type: testtube.Test,
         name: 'ConfigureReplaceTest',
         setup: function() {
-          this.stream1 = new util.StringIO()
-          this.stream2 = new util.StringIO()
-          this.stream3 = new util.StringIO()
+          this.stream1 = new carbonLog.streams.StringIO()
+          this.stream2 = new carbonLog.streams.StringIO()
+          this.stream3 = new carbonLog.streams.StringIO()
         },
         teardown: function() {
           carbonLog._reset()
