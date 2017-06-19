@@ -106,7 +106,35 @@ __(function() {
             logger.streams[0]._stream.getValue(), 
             '[1970-01-01T00:00:01.000Z] <foo.bar> INFO: hello world')
         }
-      })
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'SimpleTemplateCacheTest',
+        teardown: function() {
+          carbonLog._reset()
+        },
+        doTest: function() {
+          var logger = carbonLog.createLogger({
+            name: 'foo',
+            streams: [o({
+              _type: carbonLog.streams.Template,
+              cacheSize: 2,
+              stream: new carbonLog.streams.StringIO(false)
+            })]
+          })
+          logger.info('foo')
+          assert.equal(logger.streams[0]._cache.length, 1)
+          logger.info('foo')
+          assert.equal(logger.streams[0]._cache.length, 1)
+          logger.info('bar')
+          assert.equal(logger.streams[0]._cache.length, 2)
+          logger.info('baz')
+          assert.equal(logger.streams[0]._cache.length, 2)
+          assert(_.isNil(logger.streams[0]._cache.get('foo')))
+          assert(!_.isNil(logger.streams[0]._cache.get('bar')))
+          assert(!_.isNil(logger.streams[0]._cache.get('baz')))
+        }
+      }),
     ]
   })
 })
