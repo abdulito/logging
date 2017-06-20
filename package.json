@@ -13,6 +13,7 @@
         "type": "git", 
         "url": "https://github.com/carbon-io/logging.git"
     }, 
+    "main": "./lib/index.js",
     "directories": {
         "lib": "./lib"
     }, 
