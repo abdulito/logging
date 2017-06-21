@@ -129,7 +129,7 @@ __(function() {
       }),
       o({
         _type: testtube.Test,
-        name: 'SimpleCreateLoggerTest',
+        name: 'SimpleCreateLoggersTest',
         setup: function() {
           this.stream = new carbonLog.streams.StringIO()
         },

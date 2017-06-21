@@ -26,7 +26,10 @@ __(function() {
             name: 'foo',
             streams: [o({
               _type: carbonLog.streams.Template,
-              stream: new carbonLog.streams.StringIO(false)
+              stream: o({
+                _type: carbonLog.streams.StringIO,
+                raw: false
+              })
             })]
           })
           logger.info('foo')
@@ -56,7 +59,10 @@ __(function() {
                 time: carbonLog.streams.Template.formatters.time.iso,
                 level: carbonLog.streams.Template.formatters.level.name
               },
-              stream: new carbonLog.streams.StringIO(false)
+              stream: o({
+                _type: carbonLog.streams.StringIO,
+                raw: false
+              })
             })]
           })
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
@@ -93,7 +99,10 @@ __(function() {
                 time: 'time.iso',
                 level: 'level.name'
               },
-              stream: new carbonLog.streams.StringIO(false)
+              stream: o({
+                _type: carbonLog.streams.StringIO,
+                raw: false
+              })
             })]
           })
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
@@ -119,7 +128,10 @@ __(function() {
             streams: [o({
               _type: carbonLog.streams.Template,
               cacheSize: 2,
-              stream: new carbonLog.streams.StringIO(false)
+              stream: o({
+                _type: carbonLog.streams.StringIO,
+                raw: false
+              })
             })]
           })
           logger.info('foo')

@@ -101,6 +101,7 @@ __(function() {
           carbonLog._reset()
         },
         doTest: function() {
+          // basicConfig is called in ./logging for 'carbon-io'
           var logger = carbonLog.createLogger({
             name: 'carbon-io.foo',
             hostname: 'foo'
