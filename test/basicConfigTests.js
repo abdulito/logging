@@ -117,7 +117,7 @@ __(function() {
           logger.info('foo')
           assert.equal(
             this.stderr, 
-            '[1970-01-01T00:00:00.000Z] <foo> INFO:carbon-io.foo: foo')
+            '[1970-01-01T00:00:00.000Z] <foo> INFO:carbon-io.foo: foo\n')
         }
       })
     ]

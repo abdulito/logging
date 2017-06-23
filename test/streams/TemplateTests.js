@@ -33,7 +33,7 @@ __(function() {
             })]
           })
           logger.info('foo')
-          assert.equal(logger.streams[0]._stream.getValue(), 'foo')
+          assert.equal(logger.streams[0].stream._stream.getValue(), 'foo')
         }
       }),
       o({
@@ -67,12 +67,12 @@ __(function() {
           })
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
           assert.equal(
-            logger.streams[0]._stream.getValue(), 
+            logger.streams[0].stream._stream.getValue(), 
             '[1970-01-01T00:00:00.000Z] <foo.bar> INFO: hello world')
           this.sb.clock.tick(1000)
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
           assert.equal(
-            logger.streams[0]._stream.getValue(), 
+            logger.streams[0].stream._stream.getValue(), 
             '[1970-01-01T00:00:01.000Z] <foo.bar> INFO: hello world')
         }
       }),
@@ -107,12 +107,12 @@ __(function() {
           })
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
           assert.equal(
-            logger.streams[0]._stream.getValue(), 
+            logger.streams[0].stream._stream.getValue(), 
             '[1970-01-01T00:00:00.000Z] <foo.bar> INFO: hello world')
           this.sb.clock.tick(1000)
           logger.info({foo: 'hello', bar: 'world'}, '{{foo}} {{bar}}')
           assert.equal(
-            logger.streams[0]._stream.getValue(), 
+            logger.streams[0].stream._stream.getValue(), 
             '[1970-01-01T00:00:01.000Z] <foo.bar> INFO: hello world')
         }
       }),
@@ -135,16 +135,16 @@ __(function() {
             })]
           })
           logger.info('foo')
-          assert.equal(logger.streams[0]._cache.length, 1)
+          assert.equal(logger.streams[0].stream._cache.length, 1)
           logger.info('foo')
-          assert.equal(logger.streams[0]._cache.length, 1)
+          assert.equal(logger.streams[0].stream._cache.length, 1)
           logger.info('bar')
-          assert.equal(logger.streams[0]._cache.length, 2)
+          assert.equal(logger.streams[0].stream._cache.length, 2)
           logger.info('baz')
-          assert.equal(logger.streams[0]._cache.length, 2)
-          assert(_.isNil(logger.streams[0]._cache.get('foo')))
-          assert(!_.isNil(logger.streams[0]._cache.get('bar')))
-          assert(!_.isNil(logger.streams[0]._cache.get('baz')))
+          assert.equal(logger.streams[0].stream._cache.length, 2)
+          assert(_.isNil(logger.streams[0].stream._cache.get('foo')))
+          assert(!_.isNil(logger.streams[0].stream._cache.get('bar')))
+          assert(!_.isNil(logger.streams[0].stream._cache.get('baz')))
         }
       }),
     ]
