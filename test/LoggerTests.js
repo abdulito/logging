@@ -1,4 +1,5 @@
 var assert = require('assert')
+var util = require('util')
 
 var _ = require('lodash')
 
@@ -110,6 +111,79 @@ __(function() {
           assert.equal(records[1].msg, 'bar')
         }
       }),
+      o({
+        _type: testtube.Test,
+        name: 'logObjectTest',
+        setup: function() {
+          this.stream = new carbonLog.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          carbonLog._reset()
+        },
+        doTest: function() {
+          var logger = carbonLog.createLogger({
+            name: 'foo',
+            level: 'INFO',
+            stream: this.stream
+          })
+          logger.info({foo: 'bar'})
+          // test ejson serialization
+          assert.equal(this.stream.getValue()[0].msg, '{"foo":"bar"}')
+          function Foo() {
+            this.foo = 'bar'
+            this.bar = this
+          }
+          // test fallback to util.format('%j')
+          logger.info(new Foo())
+          assert.equal(this.stream.getValue()[0].msg, 'Foo { foo: \'bar\', bar: [Circular] }')
+        }
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'childNameUsingModuleTest',
+        setup: function() {
+          this.stream = new carbonLog.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          carbonLog._reset()
+        },
+        doTest: function() {
+          var logger = carbonLog.createLogger({
+            name: 'foo',
+            level: 'INFO',
+            stream: this.stream
+          })
+          var childLogger = logger.child(module)
+          assert.equal(childLogger.name, 'foo.LoggerTests')
+        }
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'childNameUsingObjectTest',
+        setup: function() {
+          this.stream = new carbonLog.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          carbonLog._reset()
+        },
+        doTest: function() {
+          var logger = carbonLog.createLogger({
+            name: 'foo',
+            level: 'INFO',
+            stream: this.stream
+          })
+          function Foo() {
+            this.foo = 'foo'
+          }
+          util.inherits(Foo, Object)
+          var foo = new Foo()
+          debugger
+          var childLogger = logger.child(new Foo())
+        }
+      })
     ]
   })
 })

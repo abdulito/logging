@@ -55,10 +55,6 @@ __(function() {
               _type: carbonLog.streams.Template,
               level: 'INFO',
               template: '[{{time}}] <{{hostname}}> {{level}}: {{msg}}',
-              formatters: {
-                time: carbonLog.streams.Template.formatters.time.iso,
-                level: carbonLog.streams.Template.formatters.level.name
-              },
               stream: o({
                 _type: carbonLog.streams.StringIO,
                 raw: false
@@ -135,16 +131,18 @@ __(function() {
             })]
           })
           logger.info('foo')
+          assert.equal(logger.streams[0].stream._cache.length, 0)
+          logger.info({foo: 'foo'}, '{{foo}}')
           assert.equal(logger.streams[0].stream._cache.length, 1)
-          logger.info('foo')
+          logger.info({foo: 'foo'}, '{{foo}}')
           assert.equal(logger.streams[0].stream._cache.length, 1)
-          logger.info('bar')
+          logger.info({bar: 'bar'}, '{{bar}}')
           assert.equal(logger.streams[0].stream._cache.length, 2)
-          logger.info('baz')
+          logger.info({bar: 'baz'}, '{{baz}}')
           assert.equal(logger.streams[0].stream._cache.length, 2)
-          assert(_.isNil(logger.streams[0].stream._cache.get('foo')))
-          assert(!_.isNil(logger.streams[0].stream._cache.get('bar')))
-          assert(!_.isNil(logger.streams[0].stream._cache.get('baz')))
+          assert(_.isNil(logger.streams[0].stream._cache.get('{{foo}}')))
+          assert(!_.isNil(logger.streams[0].stream._cache.get('{{bar}}')))
+          assert(!_.isNil(logger.streams[0].stream._cache.get('{{baz}}')))
         }
       }),
     ]

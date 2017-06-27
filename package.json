@@ -23,6 +23,7 @@
     "dependencies": {
         "@carbon-io/atom": "0.7.x",
         "@carbon-io/bond": "0.6.x",
+        "@carbon-io/ejson": "0.5.x",
         "bunyan": "1.8.x",
         "handlebars": "4.0.x",
         "lodash": "4.17.x",
