@@ -8,7 +8,7 @@ var _o = require('@carbon-io/bond')._o(module)
 var o = require('@carbon-io/atom').o(module)
 var testtube = require('@carbon-io/test-tube')
 
-var carbonLog = require('../lib')
+var logging = require('../lib')
 
 __(function() {
   module.exports = o.main({
@@ -19,22 +19,22 @@ __(function() {
         _type: testtube.Test,
         name: 'LoggerChildTest',
         setup: function() {
-          this.stream = new carbonLog.streams.StringIO()
+          this.stream = new logging.streams.StringIO()
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          assert.equal(_.keys(carbonLog._getLoggers()).length, 0)
-          var logger = carbonLog.createLogger({
+          assert.equal(_.keys(logging._getLoggers()).length, 0)
+          var logger = logging.createLogger({
             name: 'foo',
             stream: this.stream
           })
-          assert.equal(_.keys(carbonLog._getLoggers()).length, 1)
+          assert.equal(_.keys(logging._getLoggers()).length, 1)
           var childLogger = logger.child('bar')
-          assert.equal(_.keys(carbonLog._getLoggers()).length, 2)
+          assert.equal(_.keys(logging._getLoggers()).length, 2)
           assert.deepEqual(
-            _.keys(carbonLog._getLoggers()).sort(),
+            _.keys(logging._getLoggers()).sort(),
             ['foo', 'foo.bar']
           )
           logger.info('foo')
@@ -45,25 +45,25 @@ __(function() {
           assert.equal(records[1].name, 'foo.bar')
           assert.equal(records[1].msg, 'foo.bar')
           var grandchildLogger = childLogger.child('baz')
-          assert.equal(_.keys(carbonLog._getLoggers()).length, 3)
-          assert('foo.bar.baz' in carbonLog._getLoggers())
+          assert.equal(_.keys(logging._getLoggers()).length, 3)
+          assert('foo.bar.baz' in logging._getLoggers())
           var siblingLogger = logger.child('baz')
-          assert.equal(_.keys(carbonLog._getLoggers()).length, 4)
-          assert('foo.baz' in carbonLog._getLoggers())
+          assert.equal(_.keys(logging._getLoggers()).length, 4)
+          assert('foo.baz' in logging._getLoggers())
         }
       }),
       o({
         _type: testtube.Test,
         name: 'LoggerChildConfigTest',
         setup: function() {
-          this.stream1 = new carbonLog.streams.StringIO()
-          this.stream2 = new carbonLog.streams.StringIO()
+          this.stream1 = new logging.streams.StringIO()
+          this.stream2 = new logging.streams.StringIO()
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          var logger = carbonLog.createLogger({
+          var logger = logging.createLogger({
             name: 'foo',
             level: 'INFO',
             stream: this.stream1
@@ -86,20 +86,20 @@ __(function() {
         _type: testtube.Test,
         name: 'LoggerTransientTest',
         setup: function() {
-          this.stream = new carbonLog.streams.StringIO()
+          this.stream = new logging.streams.StringIO()
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          var logger = carbonLog.createLogger({
+          var logger = logging.createLogger({
             name: 'foo',
             level: 'INFO',
             stream: this.stream
           })
-          assert.equal(carbonLog.getLoggerNames().length, 1)
+          assert.equal(logging.getLoggerNames().length, 1)
           var transientLogger = logger.transient({id: 1234})
-          assert.equal(carbonLog.getLoggerNames().length, 1)
+          assert.equal(logging.getLoggerNames().length, 1)
           logger.info('foo')
           transientLogger.warn('bar')
           var records = this.stream.getValue()
@@ -115,14 +115,14 @@ __(function() {
         _type: testtube.Test,
         name: 'logObjectTest',
         setup: function() {
-          this.stream = new carbonLog.streams.StringIO()
+          this.stream = new logging.streams.StringIO()
           this.stream.raw = true
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          var logger = carbonLog.createLogger({
+          var logger = logging.createLogger({
             name: 'foo',
             level: 'INFO',
             stream: this.stream
@@ -143,14 +143,14 @@ __(function() {
         _type: testtube.Test,
         name: 'childNameUsingModuleTest',
         setup: function() {
-          this.stream = new carbonLog.streams.StringIO()
+          this.stream = new logging.streams.StringIO()
           this.stream.raw = true
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          var logger = carbonLog.createLogger({
+          var logger = logging.createLogger({
             name: 'foo',
             level: 'INFO',
             stream: this.stream
@@ -163,14 +163,14 @@ __(function() {
         _type: testtube.Test,
         name: 'childNameUsingObjectTest',
         setup: function() {
-          this.stream = new carbonLog.streams.StringIO()
+          this.stream = new logging.streams.StringIO()
           this.stream.raw = true
         },
         teardown: function() {
-          carbonLog._reset()
+          logging._reset()
         },
         doTest: function() {
-          var logger = carbonLog.createLogger({
+          var logger = logging.createLogger({
             name: 'foo',
             level: 'INFO',
             stream: this.stream
@@ -180,10 +180,141 @@ __(function() {
           }
           util.inherits(Foo, Object)
           var foo = new Foo()
-          debugger
           var childLogger = logger.child(new Foo())
+          assert.equal(childLogger.name, 'foo.Foo')
         }
-      })
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'instantiationViaParentObjTest',
+        setup: function() {
+          this.stream = new logging.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          logging._reset()
+        },
+        doTest: function() {
+          var parent = logging.createLogger({
+            name: 'foo',
+            level: 'INFO',
+            stream: this.stream
+          })
+          var child = o({
+            _type: logging.Logger,
+            parent: parent,
+            config: {
+              name: 'bar',
+              level: 'WARN'
+            }
+          })
+          assert.equal(child.name, 'foo.bar')
+          assert.equal(parent.streams[0].level, logging.levels.INFO)
+          var grandchild = o({
+            _type: logging.Logger,
+            parent: child,
+            config: {
+              name: 'baz',
+              level: 'ERROR'
+            }
+          })
+          assert.equal(grandchild.name, 'foo.bar.baz')
+          assert.equal(child.streams[0].level, logging.levels.WARN)
+
+          grandchild.error('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          grandchild.warn('foo')
+          assert.equal(this.stream.getValue(), null)
+          child.warn('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          child.info('foo')
+          assert.equal(this.stream.getValue(), null)
+          parent.info('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          parent.debug('foo')
+          assert.equal(this.stream.getValue(), null)
+        }
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'instantiationViaParentNameTest',
+        setup: function() {
+          this.stream = new logging.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          logging._reset()
+        },
+        doTest: function() {
+          var parent = logging.createLogger({
+            name: 'foo',
+            level: 'INFO',
+            stream: this.stream
+          })
+          var child = o({
+            _type: logging.Logger,
+            parent: 'foo',
+            config: {
+              name: 'bar',
+              level: 'WARN'
+            }
+          })
+          assert.equal(child.name, 'foo.bar')
+          assert.equal(parent.streams[0].level, logging.levels.INFO)
+          var grandchild = o({
+            _type: logging.Logger,
+            parent: 'foo.bar',
+            config: {
+              name: 'baz',
+              level: 'ERROR'
+            }
+          })
+          assert.equal(grandchild.name, 'foo.bar.baz')
+          assert.equal(child.streams[0].level, logging.levels.WARN)
+
+          grandchild.error('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          grandchild.warn('foo')
+          assert.equal(this.stream.getValue(), null)
+          child.warn('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          child.info('foo')
+          assert.equal(this.stream.getValue(), null)
+          parent.info('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+          parent.debug('foo')
+          assert.equal(this.stream.getValue(), null)
+        }
+      }),
+      o({
+        _type: testtube.Test,
+        name: 'instantiateParentViaChildTest',
+        setup: function() {
+          this.stream = new logging.streams.StringIO()
+          this.stream.raw = true
+        },
+        teardown: function() {
+          logging._reset()
+        },
+        doTest: function() {
+          var child = o({
+            _type: logging.Logger,
+            parent: 'foo',
+            config: {
+              name: 'bar',
+              level: 'WARN',
+              stream: this.stream
+            }
+          })
+          var parent = logging.getLogger('foo')
+          assert.equal(child.name, 'foo.bar')
+          assert.equal(parent.name, 'foo')
+          assert.equal(parent.level(), logging.levels.WARN)
+          assert.equal(parent.streams[0].level, logging.levels.WARN)
+          parent.warn('foo')
+          assert.equal(this.stream.getValue()[0].msg, 'foo')
+        }
+      }),
     ]
   })
 })
