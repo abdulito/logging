@@ -68,3 +68,9 @@ scratch
 # Docs
 /docs/*
 !/docs/code-frags/
+
+# travis
+.travis.yml
+
+# git modules
+.gitmodules
