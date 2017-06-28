@@ -145,6 +145,51 @@ __(function() {
           assert(!_.isNil(logger.streams[0].stream._cache.get('{{baz}}')))
         }
       }),
+      o({
+        _type: testtube.Test,
+        name: 'ChildStreamThrowsErrorOnWriteTest',
+        setup: function() {
+          var self = this
+          this.stderr = ''
+          this.sb = sinon.sandbox.create()
+          this.sb.stub(process.stderr, 'write').callsFake(function(msg) {
+            self.stderr += msg
+          })
+        },
+        teardown: function() {
+          this.sb.restore()
+          carbonLog._reset()
+        },
+        doTest: function() {
+          var logger = carbonLog.createLogger({
+            name: 'foo',
+            streams: [
+              o({
+                _type: carbonLog.streams.Template,
+                cacheSize: 2,
+                stream: {
+                  write: function() {
+                    throw new Error('boom!')
+                  }
+                }
+              }),
+              o({
+                _type: carbonLog.streams.Template,
+                cacheSize: 2,
+                stream: o({
+                  _type: carbonLog.streams.StringIO,
+                  raw: false
+                })
+              })
+            ]
+          })
+          logger.info('foo')
+          assert(this.stderr.startsWith(
+            'EXCEPTION: runtime exception encountered in @carbon-io/logging ' +
+            '<Error: boom!>:'
+          ))
+        }
+      }),
     ]
   })
 })

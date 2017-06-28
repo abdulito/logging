@@ -30,7 +30,6 @@
         "lru-cache": "4.1.x"
     }, 
     "devDependencies": {
-        "tmp": "0.0.x",
         "@carbon-io/fibers": "0.6.x",
         "@carbon-io/test-tube": "0.7.x",
         "sinon": "2.3.x",

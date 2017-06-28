@@ -315,6 +315,50 @@ __(function() {
           assert.equal(this.stream.getValue()[0].msg, 'foo')
         }
       }),
+      o({
+        _type: testtube.Test,
+        name: 'instantiateWithParentReconfigTest',
+        setup: function() {
+          this.stream1 = new logging.streams.StringIO()
+          this.stream1.raw = true
+          this.stream2 = new logging.streams.StringIO()
+          this.stream2.raw = true
+        },
+        teardown: function() {
+          logging._reset()
+        },
+        doTest: function() {
+          var child = o({
+            _type: logging.Logger,
+            parent: 'foo',
+            config: {
+              name: 'bar',
+              level: 'WARN',
+              stream: this.stream1
+            }
+          })
+          var parent = logging.getLogger('foo')
+          assert.equal(child.name, 'foo.bar')
+          assert.equal(parent.name, 'foo')
+          assert.equal(parent.level(), logging.levels.WARN)
+          assert.equal(parent.streams[0].level, logging.levels.WARN)
+          parent.warn('foo')
+          assert.equal(this.stream1.getValue()[0].msg, 'foo')
+          logging.configure({
+            '*': {
+              level: 'INFO',
+              stream: this.stream2
+            }
+          })
+          assert.equal(child.name, 'foo.bar')
+          assert.equal(parent.name, 'foo')
+          assert.equal(parent.level(), logging.levels.INFO)
+          assert.equal(parent.streams[0].level, logging.levels.INFO)
+          parent.warn('foo')
+          assert.equal(this.stream1.getValue(), null)
+          assert.equal(this.stream2.getValue()[0].msg, 'foo')
+        }
+      }),
     ]
   })
 })
