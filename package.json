@@ -30,8 +30,8 @@
         "lru-cache": "4.1.x"
     }, 
     "devDependencies": {
-        "@carbon-io/fibers": "0.6.x",
-        "@carbon-io/test-tube": "0.7.x",
+        "@carbon-io/fibers": "0.7.x",
+        "@carbon-io/test-tube": "0.6.x",
         "sinon": "2.3.x",
         "mockery": "2.0.x"
     },
