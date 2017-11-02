@@ -1,6 +1,6 @@
 {
     "name": "@carbon-io/logging", 
-    "version": "0.0.1", 
+    "version": "0.1.0", 
     "description": "carbon.io logging", 
     "keywords": [
         "logging",
